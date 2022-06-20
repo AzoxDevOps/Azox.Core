@@ -7,7 +7,7 @@ on:
 env:
   CONFIGURATION: 'Release'
   PROJECT_PATH: 'src/Azox.Core/Azox.Core.csproj'
-  OUTPUT_PATH: ${{ github.workspace }}/build/${{ env.CONFIGURATION }}
+  OUTPUT_PATH: ${{ github.workspace }}/build/ ${{ env.CONFIGURATION }}
   
 
 jobs:
