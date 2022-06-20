@@ -1,0 +1,42 @@
+name: Deploy To Nuget
+
+on:
+  push:
+    tags:
+    - 'v*'
+
+env:
+  CONFIGURATION: 'Release'
+  PROJECT_PATH: 'src/Azox.Core/Azox.Core.csproj'
+  OUTPUT_PATH: ${{ github.workspace }}/dist/${{ env.CONFIGURATION }}
+  
+
+jobs:
+  deploy:
+    name: Deploy To Nuget
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set .NET Core 6.0.x
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+      
+    - name: Restore Project Dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+    
+    - name: Get Version
+      id: project_version
+      uses: battila7/get-version-action@v2
+      
+    - name: Build Project
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration ${{ env.CONFIGURATION }} -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }} --output ${{ env.OUTPUT_PATH }}
+      
+    - name: Pack Project
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration ${{ env.CONFIGURATION }} --include-symbols -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }} --output ${{ env.OUTPUT_PATH }}
+      
+    - name: Deploy Package
+      run: dotnet nuget push ${{ env.OUTPUT_PATH }}/*.nupkg --api-key ${{ secret.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
