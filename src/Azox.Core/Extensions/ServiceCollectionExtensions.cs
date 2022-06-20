@@ -14,14 +14,14 @@
         /// <summary>
         /// 
         /// </summary>
-        public static void RegisterServices(this IServiceCollection services)
+        public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
             IEnumerable<IServiceRegister> serviceRegisters = TypeFinder
                 .FindInstancesOf<IServiceRegister>();
 
             foreach (IServiceRegister serviceRegister in serviceRegisters)
             {
-                serviceRegister.Register(services);
+                serviceRegister.Register(services, configuration);
             }
         }
 
