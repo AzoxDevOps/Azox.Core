@@ -5,7 +5,6 @@ on: [push]
 env:
   PROJECT_PATH: 'src/Azox.Core/Azox.Core.csproj'
   
-
 jobs:
   deploy:
     name: Build Project
@@ -19,10 +18,6 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 6.0.x
-    
-    - name: Get Version
-      id: project_version
-      uses: battila7/get-version-action@v2
       
-    - name: Pack Project
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }}
+    - name: Build Project
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
