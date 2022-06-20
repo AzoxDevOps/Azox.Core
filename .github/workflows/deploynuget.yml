@@ -33,4 +33,4 @@ jobs:
       run: dotnet pack ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} --include-symbols -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }} --output ${{ env.OUTPUT_PATH }}
       
     - name: Deploy Package
-      run: dotnet nuget push ${{ env.OUTPUT_PATH }}/*.nupkg --api-key ${{ secret.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: dotnet nuget push ${{ env.OUTPUT_PATH }}/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
