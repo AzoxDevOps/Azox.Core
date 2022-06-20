@@ -1,0 +1,32 @@
+name: Build Project
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  CONFIGURATION: 'Release'
+  PROJECT_PATH: 'src/Azox.Core/Azox.Core.csproj'
+  OUTPUT_PATH: ${{ github.workspace }}/build/${{ env.CONFIGURATION }}
+  
+
+jobs:
+  deploy:
+    name: Build Project
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set .NET Core 6.0.x
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    
+    - name: Get Version
+      id: project_version
+      uses: battila7/get-version-action@v2
+      
+    - name: Pack Project
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }} --output ${{ env.OUTPUT_PATH }}
