@@ -1,13 +1,9 @@
 name: Build Project
 
-on:
-  push:
-    branches: ["main"]
+on: [push]
 
 env:
-  CONFIGURATION: 'Release'
   PROJECT_PATH: 'src/Azox.Core/Azox.Core.csproj'
-  OUTPUT_PATH: ${{ github.workspace }}/build/ ${{ env.CONFIGURATION }}
   
 
 jobs:
@@ -29,4 +25,4 @@ jobs:
       uses: battila7/get-version-action@v2
       
     - name: Pack Project
-      run: dotnet build ${{ env.PROJECT_PATH }} --configuration ${{ env.CONFIGURATION }} -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }} --output ${{ env.OUTPUT_PATH }}
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release -p:PackageVersion=${{ steps.project_version.outputs.version-without-v }}
